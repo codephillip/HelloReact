@@ -9,7 +9,7 @@
 import PropTypes from 'prop-types'
 import Button from './Buttons'
 
-const Header = ({title}) => {
+const Header = ({title, triggerAddForm, showAdd}) => {
     return (
         <header>
             {/* inline props */}
@@ -17,7 +17,7 @@ const Header = ({title}) => {
             {/* style tag uses two brackets. uses camel case instead of dash */}
             <h1 style={{color: "green", backgroundColor: "skyblue"}}>app header2 {title}</h1>
             <h1 style={headingStyle}>app header3 with variable style {title}</h1>
-            <Button color='green' text='click'/>
+            <Button color={showAdd ? 'red' : 'green'} text={showAdd ? 'close' : 'add'} triggerAddForm={triggerAddForm} />
         </header>
     );
 }

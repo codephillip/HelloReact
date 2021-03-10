@@ -2,6 +2,7 @@ import React from 'react'
 import Header from './components/Header'
 import Tasks from './components/Tasks'
 import {useState} from 'react'
+import AddTask from "./components/AddTask";
 
 // class based component
 // class App extends React.Component {
@@ -15,6 +16,7 @@ import {useState} from 'react'
 // function based component
 // function App() {
 const App = () => {
+    const [showAddForm, setShowAddForm] = useState(false)
     const [tasks, setTasks] = useState(
         [
             {
@@ -41,6 +43,16 @@ const App = () => {
 
     )
 
+    const addNewTask = (task) => {
+        // console.log('add', task)
+        const id = Math.round(Math.random() * 1000)
+        // task['id'] = id
+        // spread out previous task and add id field
+        var newTask = {id, ...task}
+        console.log('new task', newTask)
+        setTasks([...tasks, newTask])
+    }
+
     const deleteTask = (id) => {
         console.log('delete', id)
         setTasks(tasks.filter((task) => task.id !== id))
@@ -54,9 +66,18 @@ const App = () => {
                 : task))
     }
 
+    const triggerAddForm = () => {
+        setShowAddForm(!showAddForm)
+        console.log('showaddform', showAddForm)
+    }
+
     return (
         <div className="container">
-            <Header title="page1"/>
+            <Header title="page1" triggerAddForm={triggerAddForm} showAdd={showAddForm}/>
+            {
+                // && short way of using IF only
+                showAddForm && <AddTask onAdd={addNewTask}/>
+            }
             <h1>hello react app</h1>
             {
                 tasks.length > 0
