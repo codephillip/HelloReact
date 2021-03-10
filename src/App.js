@@ -40,11 +40,22 @@ const App = () => {
         // setTasks([...tasks, {id: 4, text: "buy shoes", day: "Mar 20th at 3:09pm", reminder: true}])
 
     )
+
+    const deleteTask = (id) => {
+        console.log('delete', id)
+        setTasks(tasks.filter((task) => task.id !== id))
+    }
+
     return (
         <div className="container">
             <Header title="page1"/>
             <h1>hello react app</h1>
-            <Tasks tasks={tasks}/>
+
+            {
+                tasks.length > 0
+                    ? <Tasks tasks={tasks} onDelete={deleteTask}/>
+                    : 'No tasks available'
+            }
         </div>
     );
 }
