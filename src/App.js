@@ -3,6 +3,9 @@ import Header from './components/Header'
 import Tasks from './components/Tasks'
 import {useState, useEffect} from 'react'
 import AddTask from "./components/AddTask";
+import Footer from "./components/Footer";
+import {BrowserRouter as Router, Route} from "react-router-dom";
+import About from './components/About'
 
 // class based component
 // class App extends React.Component {
@@ -141,20 +144,28 @@ const App = () => {
 
     return (
         <div className="container">
-            <Header title="page1" triggerAddForm={triggerAddForm} showAdd={showAddForm}/>
-            {
-                // && short way of using IF only
-                showAddForm && <AddTask onAdd={addNewTask}/>
-            }
-            <h1>hello react app</h1>
-            {
-                tasks.length > 0
-                    ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder}/>
-                    : 'No tasks available'
-            }
+            <Router>
+                <Header title="page1" triggerAddForm={triggerAddForm} showAdd={showAddForm}/>
+
+                <Route path='/' exact render={(props) => (
+                    <>
+                        {
+                            // && short way of using IF only
+                            showAddForm && <AddTask onAdd={addNewTask}/>
+                        }
+                        {
+                            tasks.length > 0
+                                ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder}/>
+                                : 'No tasks available'
+                        }
+                    </>
+                )}/>
+
+                <Route path='/about' component={About}/>
+                <Footer/>
+            </Router>
         </div>
     );
 }
-
 
 export default App;
