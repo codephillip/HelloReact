@@ -54,7 +54,7 @@ const App = () => {
 
         getTasks()
         //dependencies trigger reload of data when they change
-    },[])
+    }, [])
 
     const fetchTasks = async () => {
         const res = await fetch('http://localhost:9000/data')
@@ -63,14 +63,34 @@ const App = () => {
         return data
     }
 
-    const addNewTask = (task) => {
-        // console.log('add', task)
-        const id = Math.round(Math.random() * 1000)
-        // task['id'] = id
-        // spread out previous task and add id field
-        var newTask = {id, ...task}
-        console.log('new task', newTask)
-        setTasks([...tasks, newTask])
+    const fetchOneTask = async (id) => {
+        const res = await fetch(`http://localhost:9000/data/${id}`)
+        const data = await res.json()
+        return data
+    }
+
+    // const addNewTask = (task) => {
+    //     // console.log('add', task)
+    //     const id = Math.round(Math.random() * 1000)
+    //     // task['id'] = id
+    //     // spread out previous task and add id field
+    //     var newTask = {id, ...task}
+    //     console.log('new task', newTask)
+    //     setTasks([...tasks, newTask])
+    // }
+
+    const addNewTask = async (task) => {
+        console.log('tasknew', task)
+        const res = await fetch("http://localhost:9000/data", {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(task)
+        })
+        const data = await res.json()
+        console.log('data response ', data)
+        setTasks([...tasks, data])
     }
 
     const deleteTask = async (id) => {
@@ -82,11 +102,35 @@ const App = () => {
         setTasks(tasks.filter((task) => task.id !== id))
     }
 
-    const toggleReminder = (id) => {
-        console.log('toggle', id)
+    // const toggleReminder = (id) => {
+    //     console.log('toggle', id)
+    //     setTasks(tasks.map(
+    //         (task) => task.id === id
+    //             ? {...task, reminder: !task.reminder}
+    //             : task))
+    // }
+
+    const toggleReminder = async (id) => {
+        const oldTask = await fetchOneTask(id)
+        const newTask = {...oldTask, reminder: !oldTask.reminder}
+
+        const res = await fetch(`http://localhost:9000/data/${id}`, {
+            method: "PUT",
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(newTask)
+        })
+
+        const resTask = await res.json()
+        // setTasks(tasks.map(
+        //     (task) => task.id === id
+        //         ? {...task, reminder: resTask.reminder}
+        //         : task))
+
         setTasks(tasks.map(
             (task) => task.id === id
-                ? {...task, reminder: !task.reminder}
+                ? resTask
                 : task))
     }
 
